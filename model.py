@@ -321,8 +321,19 @@ def combine_predictions(tree_predictions):
     
     return final_predictions
 
-# Step 14 - predict_forest (not yet solved)
-# TODO: implement
+# Step 14 - predict_forest
+def predict_forest(forest, features):
+    tree_predictions = []
+    
+    for entry in forest:
+        tree = entry['tree']
+        # Pass the full feature matrix to each tree
+        # The tree stores feature indices in the original feature space
+        predictions = predict_tree(tree, features)
+        tree_predictions.append(predictions)
+    
+    stacked_predictions = np.array(tree_predictions)
+    return combine_predictions(stacked_predictions)
 
 # Step 15 - accuracy (not yet solved)
 # TODO: implement
