@@ -210,8 +210,25 @@ def predict_example_tree(tree, example):
     # Return the leaf's prediction
     return int(current_node['prediction'])
 
-# Step 9 - predict_tree (not yet solved)
-# TODO: implement
+# Step 9 - predict_tree
+def predict_tree(tree, features):
+    """Predict class labels for every row of `features` using a fitted decision tree.
+
+    tree: dict returned by build_tree
+    features: np.ndarray of shape (n, d)
+    returns: np.ndarray of shape (n,) with integer class labels
+    """
+    # Handle empty feature matrix
+    if len(features) == 0:
+        return np.array([], dtype=int)
+    
+    # Get predictions for each row
+    predictions = []
+    for row in features:
+        predictions.append(predict_example_tree(tree, row))
+    
+    # Return as numpy array of integers
+    return np.array(predictions, dtype=int)
 
 # Step 10 - bootstrap_sample (not yet solved)
 # TODO: implement
