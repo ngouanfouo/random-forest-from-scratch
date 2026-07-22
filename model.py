@@ -134,8 +134,61 @@ def leaf_prediction(labels):
     # np.bincount counts occurrences of each class, argmax finds the most frequent
     return int(np.bincount(labels).argmax())
 
-# Step 7 - build_tree (not yet solved)
-# TODO: implement
+# Step 7 - build_tree
+def build_tree(features, labels, max_depth=10, min_samples_split=2, feature_subset=None, depth=0):
+    # Check if we should stop at this node
+    if should_stop(labels, depth, max_depth, min_samples_split):
+        return {'leaf': True, 'prediction': leaf_prediction(labels)}
+    
+    # Determine which features to consider
+    if feature_subset is None:
+        candidate_features = list(range(features.shape[1]))
+    else:
+        candidate_features = list(feature_subset)
+    
+    # If no features to consider, return a leaf
+    if len(candidate_features) == 0:
+        return {'leaf': True, 'prediction': leaf_prediction(labels)}
+    
+    # Find the best split
+    split_info = best_split(features, labels, candidate_features)
+    
+    # If no valid split found, return a leaf
+    if split_info['feature_index'] is None:
+        return {'leaf': True, 'prediction': leaf_prediction(labels)}
+    
+    feature_idx = split_info['feature_index']
+    threshold = split_info['threshold']
+    
+    # Partition the data
+    left_features, left_labels, right_features, right_labels = split_dataset(
+        features, labels, feature_idx, threshold
+    )
+    
+    # If either side is empty, return a leaf
+    if len(left_labels) == 0 or len(right_labels) == 0:
+        return {'leaf': True, 'prediction': leaf_prediction(labels)}
+    
+    # Recursively build left and right subtrees
+    left_subtree = build_tree(
+        left_features, left_labels, 
+        max_depth, min_samples_split, 
+        feature_subset, depth + 1
+    )
+    right_subtree = build_tree(
+        right_features, right_labels,
+        max_depth, min_samples_split,
+        feature_subset, depth + 1
+    )
+    
+    # Return an internal node
+    return {
+        'leaf': False,
+        'feature_index': feature_idx,
+        'threshold': threshold,
+        'left': left_subtree,
+        'right': right_subtree
+    }
 
 # Step 8 - predict_example_tree (not yet solved)
 # TODO: implement
