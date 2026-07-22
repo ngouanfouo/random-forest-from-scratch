@@ -190,8 +190,25 @@ def build_tree(features, labels, max_depth=10, min_samples_split=2, feature_subs
         'right': right_subtree
     }
 
-# Step 8 - predict_example_tree (not yet solved)
-# TODO: implement
+# Step 8 - predict_example_tree
+def predict_example_tree(tree, example):
+    # Start at the root
+    current_node = tree
+    
+    # Traverse until we hit a leaf
+    while not current_node['leaf']:
+        # Get the feature index and threshold for this internal node
+        feature_idx = current_node['feature_index']
+        threshold = current_node['threshold']
+        
+        # Check which branch to follow
+        if example[feature_idx] <= threshold:
+            current_node = current_node['left']
+        else:
+            current_node = current_node['right']
+    
+    # Return the leaf's prediction
+    return int(current_node['prediction'])
 
 # Step 9 - predict_tree (not yet solved)
 # TODO: implement
