@@ -63,8 +63,50 @@ def split_score(parent_labels, left_labels, right_labels):
     # Gain (positive when children are purer)
     return parent_imp - weighted_child_imp
 
-# Step 4 - best_split (not yet solved)
-# TODO: implement
+# Step 4 - best_split
+import numpy as np
+
+def best_split(features, labels, feature_indices):
+    best_score = 0.0
+    best_feature = None
+    best_threshold = None
+    
+    n_samples = len(labels)
+    
+    for feature_idx in feature_indices:
+        # Get the column values
+        col = features[:, feature_idx]
+        
+        # Get unique values in sorted order
+        unique_values = np.unique(col)
+        
+        # Candidate thresholds are midpoints between consecutive unique values
+        for i in range(len(unique_values) - 1):
+            threshold = (unique_values[i] + unique_values[i + 1]) / 2.0
+            
+            # Split the data
+            mask = col <= threshold
+            left_labels = labels[mask]
+            right_labels = labels[~mask]
+            
+            # Skip if either side is empty
+            if len(left_labels) == 0 or len(right_labels) == 0:
+                continue
+            
+            # Score the split
+            score = split_score(labels, left_labels, right_labels)
+            
+            # Update best if this split is better
+            if score > best_score:
+                best_score = score
+                best_feature = feature_idx
+                best_threshold = threshold
+    
+    return {
+        'feature_index': best_feature,
+        'threshold': best_threshold,
+        'score': best_score
+    }
 
 # Step 5 - should_stop (not yet solved)
 # TODO: implement
