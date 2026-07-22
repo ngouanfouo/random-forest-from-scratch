@@ -128,8 +128,11 @@ def should_stop(labels, depth, max_depth, min_samples_split):
     # Otherwise, we can still split
     return False
 
-# Step 6 - leaf_prediction (not yet solved)
-# TODO: implement
+# Step 6 - leaf_prediction
+def leaf_prediction(labels):
+    # Choose the majority class label
+    # np.bincount counts occurrences of each class, argmax finds the most frequent
+    return int(np.bincount(labels).argmax())
 
 # Step 7 - build_tree (not yet solved)
 # TODO: implement
