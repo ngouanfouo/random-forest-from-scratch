@@ -29,8 +29,21 @@ def impurity(labels):
     
     return float(gini)
 
-# Step 2 - split_dataset (not yet solved)
-# TODO: implement
+# Step 2 - split_dataset
+import numpy as np
+
+def split_dataset(features, labels, feature_index, threshold):
+    # Extract the column of interest
+    col = features[:, feature_index]
+    # Mask for rows where the feature value is <= threshold (left side)
+    mask = col <= threshold
+    # Split the data
+    left_features = features[mask]
+    left_labels = labels[mask]
+    right_features = features[~mask]
+    right_labels = labels[~mask]
+    # Return in the required order
+    return (left_features, left_labels, right_features, right_labels)
 
 # Step 3 - split_score (not yet solved)
 # TODO: implement
