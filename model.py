@@ -298,8 +298,28 @@ def train_forest(features, labels, num_trees=10, max_depth=10, min_samples_split
     
     return forest
 
-# Step 13 - combine_predictions (not yet solved)
-# TODO: implement
+# Step 13 - combine_predictions
+def combine_predictions(tree_predictions):
+    # Get number of trees and examples
+    num_trees, n_examples = tree_predictions.shape
+    
+    # Allocate output array
+    final_predictions = np.empty(n_examples, dtype=int)
+    
+    # For each example, find the most common prediction across trees
+    for i in range(n_examples):
+        # Get all tree predictions for this example
+        votes = tree_predictions[:, i]
+        
+        # Count occurrences of each class
+        # Using bincount works if labels are non-negative integers
+        counts = np.bincount(votes)
+        
+        # Find the class with the most votes
+        # If there's a tie, argmax returns the first (smallest) class with max count
+        final_predictions[i] = np.argmax(counts)
+    
+    return final_predictions
 
 # Step 14 - predict_forest (not yet solved)
 # TODO: implement
